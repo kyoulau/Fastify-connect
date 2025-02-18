@@ -1,0 +1,42 @@
+# Dependências
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Arquivos de ambiente
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# Build e compilação
+dist/
+build/
+*.js
+*.js.map
+
+# Logs e temporários
+*.log
+*.tmp
+
+# Configurações de IDE/Editor
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# Testes e cobertura
+coverage/
+.nyc_output/
+
+# Outros
+*.zip
+*.tar.gz
+*.swp
