@@ -1,3 +1,5 @@
+import * as dotenv from 'dotenv';
+dotenv.config(); 
 
 import {fastify} from "fastify";
 import { fastifyCors } from "@fastify/cors";
@@ -6,6 +8,7 @@ import { fastifySwagger } from '@fastify/swagger'
 import { createSubscribeToEvent } from './routes/create-subscribe-to-evento';
 import fastifySwaggerUi from "@fastify/swagger-ui";
 import { env } from "../env";
+
 
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()

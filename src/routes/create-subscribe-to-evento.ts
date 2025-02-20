@@ -1,9 +1,6 @@
-import { ErrorMessages } from './../../node_modules/zod-to-json-schema/dist/types/errorMessages.d';
-import fastify from 'fastify';
+import { subscribeToEvent } from '../functions/subscribe-to-events';
 import { userSchema, UserSchemaType } from './schemas/userSchema';
 import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
-import { request } from 'http';
-import { z } from 'zod';
 import { userResponseSchema } from './schemas/userSchemaResponse';
 
 export const createSubscribeToEvent: FastifyPluginAsyncZod = async (app) =>{
@@ -19,16 +16,17 @@ export const createSubscribeToEvent: FastifyPluginAsyncZod = async (app) =>{
   }, async (request,reply) => {
     try {
       const user = request.body;
-      // Validações adicionais (exemplo: verificar se o usuário já existe)
-    // const existingUser = await findUserByEmail(user.email);
-    // if (existingUser) {
-    //   throw new Error('User already exists');
-    // }
 
-    // Retorna campos desejados
+      const { subscriberId } = await subscribeToEvent({
+        name: user.name,
+        email:user.email,
+        age:user.age
+      })
+      
     const responseData = {
       name: user.name,
       email: user.email,
+      subscriberId: subscriberId
     };
 
     reply.status(201).send(responseData)
@@ -36,17 +34,18 @@ export const createSubscribeToEvent: FastifyPluginAsyncZod = async (app) =>{
     } catch (error) {
 
       request.log.error(error);
-      reply.status(500).send({
-        message: 'Internal Server Error',
-        error: error
-      })
-      
+
+      if (error instanceof Error) { 
+        reply.status(500).send({
+          message: 'Internal Server Error',
+          error: error.message, // Envia apenas a mensagem do erro
+        });
+      } else { // Outros tipos de erro
+        reply.status(500).send({
+          message: 'Internal Server Error',
+          error: 'An unexpected error occurred.', // Mensagem genérica
+        });}
     }
-    
-    
-
-    
-
-    
   })
+
 }
