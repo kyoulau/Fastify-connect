@@ -7,7 +7,7 @@ interface SubscribeToEventParams{
   email: string
   age: number
 }
-
+//metodo no redis
 export async function subscribeToEvent({
   name,
   email,

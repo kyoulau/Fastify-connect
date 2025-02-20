@@ -8,6 +8,7 @@ import { fastifySwagger } from '@fastify/swagger'
 import { createSubscribeToEvent } from './routes/create-subscribe-to-evento';
 import fastifySwaggerUi from "@fastify/swagger-ui";
 import { env } from "../env";
+import { accessInviteLinkRoute } from './routes/access-invite-link';
 
 
 
@@ -40,6 +41,8 @@ app.register(fastifySwaggerUi, {
 })
 
 app.register(createSubscribeToEvent)
+
+app.register(accessInviteLinkRoute)
 
 app.listen({port: env.PORT}).then(() => {
   console.log('HTTP server runing!')
