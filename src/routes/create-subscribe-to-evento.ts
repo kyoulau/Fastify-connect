@@ -2,6 +2,7 @@ import { subscribeToEvent } from '../functions/subscribe-to-events';
 import { userSchema, UserSchemaType } from './schemas/userSchema';
 import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import { userResponseSchema } from './schemas/userSchemaResponse';
+import {z} from 'zod';
 
 export const createSubscribeToEvent: FastifyPluginAsyncZod = async (app) =>{
   app.post<{Body: UserSchemaType}>('/subscriptions',{
@@ -9,27 +10,36 @@ export const createSubscribeToEvent: FastifyPluginAsyncZod = async (app) =>{
     schema: {
       body: userSchema,
       response:{
-        201: userResponseSchema
+        201: z.object({
+          subscriberId: z.string()
+        }),
       },
     },
     
   }, async (request,reply) => {
     try {
-      const user = request.body;
+      const {name, email, age } = request.body;
+      
 
       const { subscriberId } = await subscribeToEvent({
-        name: user.name,
-        email:user.email,
-        age:user.age
+        name,
+        email,
+        age,
       })
-      
-    const responseData = {
-      name: user.name,
-      email: user.email,
-      subscriberId: subscriberId
-    };
 
-    reply.status(201).send(responseData)
+      console.log(subscriberId)
+      
+    // const responseData = {
+    //   name: user.name,
+    //   email: user.email,
+    //   subscriberId: subscriberId
+    // };
+
+    //console.log(subscriberId)
+
+    return reply.status(201).send({
+      subscriberId
+    })
 
     } catch (error) {
 
