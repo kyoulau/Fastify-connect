@@ -1,33 +1,32 @@
 import { subscribeToEvent } from '../functions/subscribe-to-events';
 import { userSchema, UserSchemaType } from './schemas/userSchema';
 import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
-import { userResponseSchema } from './schemas/userSchemaResponse';
 import {z} from 'zod';
 
-export const createSubscribeToEvent: FastifyPluginAsyncZod = async (app) =>{
+
+export const createSubscribeToEventRoute: FastifyPluginAsyncZod = async (app) =>{
   app.post<{Body: UserSchemaType}>('/subscriptions',{
+
     //Define o esquema de validação para o corpo da requisição (body) e a resposta (response).
     schema: {
+      summary: 'Subscribe someone to the event',
+      tags: ['subs'],
       body: userSchema,
       response:{
         201: z.object({
           subscriberId: z.string()
         }),
       },
-    },
-    
-  }, async (request,reply) => {
+    }}, async (request,reply) => {
     try {
-      const {name, email, age } = request.body;
+      const {name, email, age, referral } = request.body;
       
-
       const { subscriberId } = await subscribeToEvent({
         name,
         email,
         age,
+        referrerId: referral
       })
-
-      console.log(subscriberId)
       
     // const responseData = {
     //   name: user.name,
@@ -48,12 +47,12 @@ export const createSubscribeToEvent: FastifyPluginAsyncZod = async (app) =>{
       if (error instanceof Error) { 
         reply.status(500).send({
           message: 'Internal Server Error',
-          error: error.message, // Envia apenas a mensagem do erro
+          error: error.message, 
         });
-      } else { // Outros tipos de erro
+      } else { 
         reply.status(500).send({
           message: 'Internal Server Error',
-          error: 'An unexpected error occurred.', // Mensagem genérica
+          error: 'An unexpected error occurred.', 
         });}
     }
   })

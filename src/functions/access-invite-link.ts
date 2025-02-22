@@ -1,8 +1,6 @@
 
-import { db } from "../drizzle/client"
-import { subscriptions } from "../drizzle/schema/subscriptions"
 import { redis } from "../redis/client"
-//método no sql
+//método no redis
 interface AccessToInviteLinkParams{
   subscriberId: string
 }
